@@ -1,0 +1,10 @@
+{
+    "type": "postgres",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "username": "chainbridge-guardian",
+    "password": "chainbridge-guardian",
+    "database": "chainbridge-guardian",
+    "logging": true,
+    "synchronize": true
+}

@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+    app:
+        build:
+            args: {}
+            context: ..
+            dockerfile: docker/Dockerfile
+    postgres:
+        image: postgres:13.3-alpine
+        environment:
+            POSTGRES_DB: chainbridge-guardian
+            POSTGRES_PASSWORD: chainbridge-guardian
+            POSTGRES_USER: chainbridge-guardian
+        ports:
+            - 127.0.0.1:5432:5432
+        restart: always
+        volumes:
+            - postgres:/var/lib/postgresql/data
+
+volumes:
+    postgres:

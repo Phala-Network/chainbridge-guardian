@@ -809,6 +809,11 @@ buffer-from@^1.0.0:
   resolved "https://registry.nlark.com/buffer-from/download/buffer-from-1.1.2.tgz?cache=0&sync_timestamp=1627578510347&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fbuffer-from%2Fdownload%2Fbuffer-from-1.1.2.tgz#2b146a6fd72e80b4f55d255f35ed59a3a9a41bd5"
   integrity sha1-KxRqb9cugLT1XSVfNe1Zo6mkG9U=
 
+buffer-writer@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npm.taobao.org/buffer-writer/download/buffer-writer-2.0.0.tgz#ce7eb81a38f7829db09c873f2fbb792c0c98ec04"
+  integrity sha1-zn64Gjj3gp2wnIc/L7t5LAyY7AQ=
+
 buffer@^5.5.0:
   version "5.7.1"
   resolved "https://registry.npm.taobao.org/buffer/download/buffer-5.7.1.tgz?cache=0&sync_timestamp=1606098078312&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fbuffer%2Fdownload%2Fbuffer-5.7.1.tgz#ba62e7c13133053582197160851a8f648e99eed0"
@@ -2489,6 +2494,11 @@ p-try@^1.0.0:
   resolved "https://registry.npm.taobao.org/p-try/download/p-try-1.0.0.tgz#cbc79cdbaf8fd4228e13f621f2b1a237c1b207b3"
   integrity sha1-y8ec26+P1CKOE/Yh8rGiN8GyB7M=
 
+packet-reader@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/packet-reader/download/packet-reader-1.0.0.tgz#9238e5480dedabacfe1fe3f2771063f164157d74"
+  integrity sha1-kjjlSA3tq6z+H+PydxBj8WQVfXQ=
+
 parent-module@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npm.taobao.org/parent-module/download/parent-module-1.0.1.tgz#691d2709e78c79fae3a156622452d00762caaaa2"
@@ -2578,6 +2588,57 @@ path-type@^4.0.0:
   resolved "https://registry.npm.taobao.org/path-type/download/path-type-4.0.0.tgz?cache=0&sync_timestamp=1611752074264&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fpath-type%2Fdownload%2Fpath-type-4.0.0.tgz#84ed01c0a7ba380afe09d90a8c180dcd9d03043b"
   integrity sha1-hO0BwKe6OAr+CdkKjBgNzZ0DBDs=
 
+pg-connection-string@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.npm.taobao.org/pg-connection-string/download/pg-connection-string-2.5.0.tgz#538cadd0f7e603fc09a12590f3b8a452c2c0cf34"
+  integrity sha1-U4yt0PfmA/wJoSWQ87ikUsLAzzQ=
+
+pg-int8@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npm.taobao.org/pg-int8/download/pg-int8-1.0.1.tgz#943bd463bf5b71b4170115f80f8efc9a0c0eb78c"
+  integrity sha1-lDvUY79bcbQXARX4D478mgwOt4w=
+
+pg-pool@^3.4.1:
+  version "3.4.1"
+  resolved "https://registry.nlark.com/pg-pool/download/pg-pool-3.4.1.tgz#0e71ce2c67b442a5e862a9c182172c37eda71e9c"
+  integrity sha1-DnHOLGe0QqXoYqnBghcsN+2nHpw=
+
+pg-protocol@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.npm.taobao.org/pg-protocol/download/pg-protocol-1.5.0.tgz#b5dd452257314565e2d54ab3c132adc46565a6a0"
+  integrity sha1-td1FIlcxRWXi1UqzwTKtxGVlpqA=
+
+pg-types@^2.1.0:
+  version "2.2.0"
+  resolved "https://registry.npm.taobao.org/pg-types/download/pg-types-2.2.0.tgz#2d0250d636454f7cfa3b6ae0382fdfa8063254a3"
+  integrity sha1-LQJQ1jZFT3z6O2rgOC/fqAYyVKM=
+  dependencies:
+    pg-int8 "1.0.1"
+    postgres-array "~2.0.0"
+    postgres-bytea "~1.0.0"
+    postgres-date "~1.0.4"
+    postgres-interval "^1.1.0"
+
+pg@^8.7.1:
+  version "8.7.1"
+  resolved "https://registry.nlark.com/pg/download/pg-8.7.1.tgz#9ea9d1ec225980c36f94e181d009ab9f4ce4c471"
+  integrity sha1-nqnR7CJZgMNvlOGB0Amrn0zkxHE=
+  dependencies:
+    buffer-writer "2.0.0"
+    packet-reader "1.0.0"
+    pg-connection-string "^2.5.0"
+    pg-pool "^3.4.1"
+    pg-protocol "^1.5.0"
+    pg-types "^2.1.0"
+    pgpass "1.x"
+
+pgpass@1.x:
+  version "1.0.4"
+  resolved "https://registry.npm.taobao.org/pgpass/download/pgpass-1.0.4.tgz#85eb93a83800b20f8057a2b029bf05abaf94ea9c"
+  integrity sha1-heuTqDgAsg+AV6KwKb8Fq6+U6pw=
+  dependencies:
+    split2 "^3.1.1"
+
 picomatch@^2.0.4, picomatch@^2.2.1, picomatch@^2.2.3:
   version "2.3.0"
   resolved "https://registry.nlark.com/picomatch/download/picomatch-2.3.0.tgz?cache=0&sync_timestamp=1621648246651&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fpicomatch%2Fdownload%2Fpicomatch-2.3.0.tgz#f1f061de8f6a4bf022892e2d128234fb98302972"
@@ -2623,6 +2684,28 @@ pluralize@8.0.0:
   version "8.0.0"
   resolved "https://registry.npm.taobao.org/pluralize/download/pluralize-8.0.0.tgz#1a6fa16a38d12a1901e0320fa017051c539ce3b1"
   integrity sha1-Gm+hajjRKhkB4DIPoBcFHFOc47E=
+
+postgres-array@~2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npm.taobao.org/postgres-array/download/postgres-array-2.0.0.tgz#48f8fce054fbc69671999329b8834b772652d82e"
+  integrity sha1-SPj84FT7xpZxmZMpuINLdyZS2C4=
+
+postgres-bytea@~1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/postgres-bytea/download/postgres-bytea-1.0.0.tgz#027b533c0aa890e26d172d47cf9ccecc521acd35"
+  integrity sha1-AntTPAqokOJtFy1Hz5zOzFIazTU=
+
+postgres-date@~1.0.4:
+  version "1.0.7"
+  resolved "https://registry.npm.taobao.org/postgres-date/download/postgres-date-1.0.7.tgz?cache=0&sync_timestamp=1615263838739&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fpostgres-date%2Fdownload%2Fpostgres-date-1.0.7.tgz#51bc086006005e5061c591cee727f2531bf641a8"
+  integrity sha1-UbwIYAYAXlBhxZHO5yfyUxv2Qag=
+
+postgres-interval@^1.1.0:
+  version "1.2.0"
+  resolved "https://registry.npm.taobao.org/postgres-interval/download/postgres-interval-1.2.0.tgz#b460c82cb1587507788819a06aa0fffdb3544695"
+  integrity sha1-tGDILLFYdQd4iBmgaqD//bNURpU=
+  dependencies:
+    xtend "^4.0.0"
 
 prelude-ls@^1.2.1:
   version "1.2.1"
@@ -2708,7 +2791,7 @@ read-pkg@^3.0.0:
     normalize-package-data "^2.3.2"
     path-type "^3.0.0"
 
-readable-stream@^3.4.0, readable-stream@^3.6.0:
+readable-stream@^3.0.0, readable-stream@^3.4.0, readable-stream@^3.6.0:
   version "3.6.0"
   resolved "https://registry.npm.taobao.org/readable-stream/download/readable-stream-3.6.0.tgz#337bbda3adc0706bd3e024426a286d4b4b2c9198"
   integrity sha1-M3u9o63AcGvT4CRCaihtS0sskZg=
@@ -3012,6 +3095,13 @@ spdx-license-ids@^3.0.0:
   version "3.0.10"
   resolved "https://registry.nlark.com/spdx-license-ids/download/spdx-license-ids-3.0.10.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fspdx-license-ids%2Fdownload%2Fspdx-license-ids-3.0.10.tgz#0d9becccde7003d6c658d487dd48a32f0bf3014b"
   integrity sha1-DZvszN5wA9bGWNSH3UijLwvzAUs=
+
+split2@^3.1.1:
+  version "3.2.2"
+  resolved "https://registry.npm.taobao.org/split2/download/split2-3.2.2.tgz?cache=0&sync_timestamp=1598084394987&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fsplit2%2Fdownload%2Fsplit2-3.2.2.tgz#bf2cf2a37d838312c249c89206fd7a17dd12365f"
+  integrity sha1-vyzyo32DgxLCSciSBv16F90SNl8=
+  dependencies:
+    readable-stream "^3.0.0"
 
 sprintf-js@~1.0.2:
   version "1.0.3"
@@ -3499,6 +3589,11 @@ xmlbuilder@~11.0.0:
   version "11.0.1"
   resolved "https://registry.npm.taobao.org/xmlbuilder/download/xmlbuilder-11.0.1.tgz#be9bae1c8a046e76b31127726347d0ad7002beb3"
   integrity sha1-vpuuHIoEbnazESdyY0fQrXACvrM=
+
+xtend@^4.0.0:
+  version "4.0.2"
+  resolved "https://registry.npm.taobao.org/xtend/download/xtend-4.0.2.tgz#bb72779f5fa465186b1f438f674fa347fdb5db54"
+  integrity sha1-u3J3n1+kZRhrH0OPZ0+jR/2121Q=
 
 y18n@^5.0.5:
   version "5.0.8"
