@@ -1,4 +1,7 @@
 {
-  "extends": "./tsconfig.json",
-  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "noEmit": false
+    },
+    "exclude": ["gulpfile.ts", "node_modules", "test", "dist", "**/*spec.ts"]
 }

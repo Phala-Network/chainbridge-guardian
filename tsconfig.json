@@ -6,9 +6,11 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "forceConsistentCasingInFileNames": true,
+        "inlineSourceMap": true,
         "isolatedModules": true,
         "module": "commonjs",
         "moduleResolution": "node",
+        "noEmit": true,
         "noFallthroughCasesInSwitch": true,
         "noImplicitOverride": true,
         "noImplicitReturns": true,
@@ -21,5 +23,6 @@
         "skipLibCheck": true,
         "strict": true,
         "target": "esnext"
-    }
+    },
+    "exclude": ["gulpfile.ts"]
 }
