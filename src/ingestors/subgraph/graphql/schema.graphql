@@ -1,0 +1,41 @@
+scalar BigInt
+scalar Bytes
+
+type DepositRecord @entity {
+    id: ID!
+    transaction: Bytes!
+    amount: BigInt!
+    depositor: Bytes!
+    destinationChainId: Int!
+    destinationRecipient: Bytes!
+    nonce: BigInt!
+    resourceId: Bytes!
+}
+
+input DepositRecord_filter {
+    destinationChainId: Int
+    nonce_gt: BigInt
+    resourceId: Bytes
+}
+
+enum DepositRecord_orderBy {
+    nonce
+}
+
+enum OrderDirection {
+    asc
+}
+
+type RootQuery {
+    depositRecords(
+        first: Int
+        orderBy: DepositRecord_orderBy
+        orderDirection: OrderDirection
+        skip: Int
+        where: DepositRecord_filter
+    ): [DepositRecord!]!
+}
+
+schema {
+    query: RootQuery
+}

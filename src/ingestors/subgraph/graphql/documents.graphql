@@ -1,0 +1,15 @@
+query getDepositRecords($destinationChainId: Int!, $nonceGreaterThan: BigInt!, $first: Int!) {
+    depositRecords(
+        first: $first
+        orderBy: nonce
+        orderDirection: asc
+        where: { destinationChainId: $destinationChainId, nonce_gt: $nonceGreaterThan }
+    ) {
+        amount
+        depositor
+        destinationChainId
+        destinationRecipient
+        nonce
+        resourceId
+    }
+}
