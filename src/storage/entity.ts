@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm'
 
 export interface IBridgeTransfer {
     destinationChainId: number
@@ -7,23 +7,26 @@ export interface IBridgeTransfer {
 
     amount: string
     depositor: string
-    destinationRecipientAddress: string
+    destinationRecipient: string
     nonce: string
-    tokenAddress: string
 
     calculatedBalance: string
 }
 
 @Entity()
+@Index(['destinationChainId', 'originChainId', 'nonce'], { unique: true })
+@Index(['destinationChainId', 'originChainId', 'resourceId'])
 export class BridgeTransfer implements IBridgeTransfer {
     @PrimaryGeneratedColumn() public id!: number
+
+    @Column() public destinationChainId!: number
+    @Column() public originChainId!: number
+    @Column() public resourceId!: string
+
+    @Column({ type: 'bigint' }) public nonce!: string
+
     @Column() public amount!: string
     @Column() public calculatedBalance!: string
     @Column() public depositor!: string
-    @Column() public destinationChainId!: number
-    @Column() public destinationRecipientAddress!: string
-    @Column({ type: 'bigint' }) public nonce!: string
-    @Column() public originChainId!: number
-    @Column() public resourceId!: string
-    @Column() public tokenAddress!: string
+    @Column() public destinationRecipient!: string
 }

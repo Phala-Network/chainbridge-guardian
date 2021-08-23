@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { MetricsModule } from '../metrics'
+import { StorageModule } from '../storage'
 import { BridgeTransfer } from '../storage/entity'
 import { MetricsController } from './controllers/metrics.controller'
 
@@ -8,6 +9,7 @@ import { MetricsController } from './controllers/metrics.controller'
     controllers: [MetricsController],
     imports: [
         MetricsModule,
+        StorageModule,
         TypeOrmModule.forRoot({ ...require('../../ormconfig.json'), entities: [BridgeTransfer] }),
     ],
 })

@@ -1,78 +1,89 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
+import { EventEmitter2 } from '@nestjs/event-emitter'
 import { InjectEntityManager } from '@nestjs/typeorm'
 import BN from 'bn.js'
 import { EntityManager, LessThan, MoreThan } from 'typeorm'
 import { BridgeTransfer, IBridgeTransfer } from './entity'
+import { EVENT_DEPOSIT_RECORD_CREATED, IDepositRecordCreatedEvent } from './events'
 
 @Injectable()
 export class BridgeTransferService {
+    private logger: Logger = new Logger()
+
     constructor(
         @InjectEntityManager() private readonly entityManager: EntityManager,
-        @Inject() private readonly logger: Logger
+        @Inject() private readonly events: EventEmitter2
     ) {}
 
-    public async insert(record: IBridgeTransfer): Promise<void> {
-        const { amount, destinationChainId, nonce, originChainId, resourceId } = record
+    public async findLastOne(destinationChainId: number, originChainId: number): Promise<IBridgeTransfer | undefined> {
+        return (
+            await this.entityManager.find(BridgeTransfer, {
+                order: { nonce: 'DESC' },
+                take: 1,
+                where: { destinationChainId, originChainId },
+            })
+        )[0]
+    }
+
+    public async insert(insert: Omit<IBridgeTransfer, 'calculatedBalance'> & Partial<IBridgeTransfer>): Promise<void> {
+        const { amount, depositor, destinationChainId, destinationRecipient, nonce, originChainId, resourceId } = insert
 
         await this.entityManager.transaction(async (tx) => {
             const repo = tx.getRepository(BridgeTransfer)
 
-            this.logger.verbose('reading record with highest nonce', {
-                destinationChainId,
-                nonce,
-                resourceId,
-                originChainId,
-            })
+            this.logger.debug(
+                `begin insert: from=${originChainId}, to=${destinationChainId}, nonce=${nonce}, amount=${amount}`
+            )
 
-            const prev = await repo.find({
+            // lookup last record for accumulated balance
+
+            const last = await repo.find({
                 order: { nonce: 'DESC' },
                 select: ['calculatedBalance', 'nonce'],
                 take: 1,
                 where: { destinationChainId, nonce: LessThan(nonce), resourceId, originChainId },
             })
 
-            // calculate accumulated balance
+            // calculate accumulated balance and insert records
 
-            let balance = new BN(prev[0]?.calculatedBalance ?? '0').add(new BN(amount))
-            record.calculatedBalance = balance.toString()
+            let calculatedBalance = new BN(last[0]?.calculatedBalance ?? '0', 10).add(new BN(amount, 10))
 
-            this.logger.debug('saving record', {
+            const entity: IBridgeTransfer = {
                 amount,
-                balance,
+                calculatedBalance: calculatedBalance.toString(),
+                depositor,
                 destinationChainId,
+                destinationRecipient,
                 nonce,
-                resourceId,
                 originChainId,
-            })
-            await repo.save(record)
+                resourceId,
+            }
 
-            // read victim records affected by this insertion that need to have balance updated
+            await repo.save(entity)
 
-            const next = await repo.find({
+            // update victim records affected by this insertion that need to have balance updated
+
+            const victims = await repo.find({
                 order: { nonce: 'ASC' },
                 select: ['amount', 'calculatedBalance', 'nonce'],
                 where: { destinationChainId, nonce: MoreThan(nonce), resourceId, originChainId },
             })
 
-            if (next.length === 0) {
-                // no victim records of this insertion
-                return
+            const queue: Promise<unknown>[] = []
+
+            for (const victim of victims) {
+                const { amount } = victim
+                calculatedBalance = calculatedBalance.add(new BN(amount, 10))
+                queue.push(repo.save({ calculatedBalance: calculatedBalance.toString() }))
             }
 
-            this.logger.warn(`updating ${next.length} victim records of insertion`, {
-                destinationChainId,
-                nonce,
-                resourceId,
-                originChainId,
-            })
-
-            await Promise.all(
-                next.map((record) => {
-                    balance = balance.add(new BN(record.amount))
-                    record.calculatedBalance = balance.toString()
-                    return repo.save(record)
-                })
-            )
+            await Promise.all(queue)
         })
+
+        this.events.emit(EVENT_DEPOSIT_RECORD_CREATED, {
+            destinationChainId,
+            nonce,
+            originChainId,
+        } as IDepositRecordCreatedEvent)
     }
 }
