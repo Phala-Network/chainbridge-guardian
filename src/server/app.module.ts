@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { GlobalConfigModule } from '../config'
 import { IngestorModule } from '../ingestors'
 import { SubgraphIngestorModule } from '../ingestors/subgraph'
+import { SubqueryIngestorModule } from '../ingestors/subquery'
 import { MetricsModule } from '../metrics'
 import { TaskQueueModule } from '../queues'
 import { StorageModule } from '../storage'
@@ -13,12 +14,13 @@ import { MetricsController } from './controllers/metrics.controller'
 @Module({
     controllers: [MetricsController],
     imports: [
-        EventEmitterModule.forRoot({ wildcard: false }),
+        EventEmitterModule.forRoot(),
         GlobalConfigModule,
         IngestorModule,
         MetricsModule,
         StorageModule,
         SubgraphIngestorModule,
+        SubqueryIngestorModule,
         TaskQueueModule,
         TypeOrmModule.forRoot({ ...require('../../ormconfig.json'), entities: [BridgeTransfer] }),
     ],

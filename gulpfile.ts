@@ -16,6 +16,17 @@ export const graphql = async (): Promise<void> => {
                 },
                 plugins: ['typescript', 'typescript-graphql-request', 'typescript-operations'],
             },
+            './src/ingestors/subquery/graphql/index.ts': {
+                documents: resolve(__dirname, 'src', 'ingestors', 'subquery', 'graphql', 'documents.graphql'),
+                schema: resolve(__dirname, 'src', 'ingestors', 'subquery', 'graphql', 'schema.graphql'),
+                config: {
+                    scalars: {
+                        BigFloat: 'string',
+                    },
+                    strictScalars: true,
+                },
+                plugins: ['typescript', 'typescript-graphql-request', 'typescript-operations'],
+            },
         },
     })
 }

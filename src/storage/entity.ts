@@ -1,5 +1,12 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm'
 
+export enum BridgeTransferStatusEnum {
+    Approved = 'approved',
+    Succeeded = 'succeeded',
+}
+
+export type BridgeTransferStatus = BridgeTransferStatusEnum | null
+
 export interface IBridgeTransfer {
     destinationChainId: number
     originChainId: number
@@ -9,6 +16,8 @@ export interface IBridgeTransfer {
     depositor: string
     destinationRecipient: string
     nonce: string
+
+    status: BridgeTransferStatus
 
     calculatedBalance: string
 }
@@ -29,4 +38,7 @@ export class BridgeTransfer implements IBridgeTransfer {
     @Column() public calculatedBalance!: string
     @Column() public depositor!: string
     @Column() public destinationRecipient!: string
+
+    @Column({ default: null, enum: ['approved', 'succeeded'], nullable: true, type: 'text' })
+    public status!: BridgeTransferStatus
 }

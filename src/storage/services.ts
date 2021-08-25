@@ -1,9 +1,9 @@
-import { Inject, Injectable, Logger } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import { EventEmitter2 } from '@nestjs/event-emitter'
 import { InjectEntityManager } from '@nestjs/typeorm'
 import BN from 'bn.js'
 import { EntityManager, LessThan, MoreThan } from 'typeorm'
-import { BridgeTransfer, IBridgeTransfer } from './entity'
+import { BridgeTransfer, BridgeTransferStatus, IBridgeTransfer } from './entity'
 import { EVENT_DEPOSIT_RECORD_CREATED, IDepositRecordCreatedEvent } from './events'
 
 @Injectable()
@@ -12,7 +12,7 @@ export class BridgeTransferService {
 
     constructor(
         @InjectEntityManager() private readonly entityManager: EntityManager,
-        @Inject() private readonly events: EventEmitter2
+        private readonly events: EventEmitter2
     ) {}
 
     public async findLastOne(destinationChainId: number, originChainId: number): Promise<IBridgeTransfer | undefined> {
@@ -57,6 +57,7 @@ export class BridgeTransferService {
                 nonce,
                 originChainId,
                 resourceId,
+                status: null,
             }
 
             await repo.save(entity)
@@ -85,5 +86,21 @@ export class BridgeTransferService {
             nonce,
             originChainId,
         } as IDepositRecordCreatedEvent)
+    }
+
+    public async updateStatus(
+        originChainId: number,
+        destinationChainId: number,
+        nonce: string,
+        status: BridgeTransferStatus
+    ): Promise<void> {
+        await this.entityManager.transaction(async (tx) => {
+            const records = tx.getRepository(BridgeTransfer)
+            const record = (await records.find({ where: { destinationChainId, nonce, originChainId } }))[0]
+            if (record !== undefined) {
+                record.status = status
+                await records.save(record)
+            }
+        })
     }
 }

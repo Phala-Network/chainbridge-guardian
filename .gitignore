@@ -3,6 +3,7 @@ node_modules
 # build artifacts
 dist
 src/ingestors/subgraph/graphql/index.ts
+src/ingestors/subquery/graphql/index.ts
 yarn-error.log
 
 # configs

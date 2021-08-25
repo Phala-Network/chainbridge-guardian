@@ -1,0 +1,63 @@
+scalar BigFloat
+
+type Query implements Node {
+    query: Query!
+
+    nodeId: ID!
+
+    chainBridgeProposalApprovals(filter: ChainBridgeProposalApprovalFilter): ChainBridgeProposalApprovalsConnection
+
+    chainBridgeProposalExecutions(filter: ChainBridgeProposalExecutionFilter): ChainBridgeProposalExecutionsConnection
+}
+
+interface Node {
+    nodeId: ID!
+}
+
+input BigFloatFilter {
+    equalTo: BigFloat
+}
+
+input IntFilter {
+    equalTo: Int
+}
+
+type ChainBridgeProposalApprovalsConnection {
+    nodes: [ChainBridgeProposalApproval]!
+}
+
+type ChainBridgeProposalApproval implements Node {
+    nodeId: ID!
+    id: String!
+    depositNonce: BigFloat!
+    originChainId: Int!
+    approvalBlockHeight: BigFloat!
+    approvalExtrinsic: String!
+    signer: String!
+}
+
+input ChainBridgeProposalApprovalFilter {
+    and: [ChainBridgeProposalApprovalFilter!]
+
+    depositNonce: BigFloatFilter
+    originChainId: IntFilter
+}
+
+type ChainBridgeProposalExecutionsConnection {
+    nodes: [ChainBridgeProposalExecution]!
+}
+
+type ChainBridgeProposalExecution implements Node {
+    nodeId: ID!
+    id: String!
+    depositNonce: BigFloat!
+    originChainId: Int!
+    signer: String!
+}
+
+input ChainBridgeProposalExecutionFilter {
+    and: [ChainBridgeProposalExecutionFilter!]
+
+    depositNonce: BigFloatFilter
+    originChainId: IntFilter
+}

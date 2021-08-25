@@ -79,6 +79,7 @@ export class SubgraphDepositRecordIngestor {
                     nonce,
                     originChainId,
                     resourceId,
+                    status: null,
                 })
             }
 
