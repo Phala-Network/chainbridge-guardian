@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common'
 import { OnEvent } from '@nestjs/event-emitter'
 import { GraphQLClient } from 'graphql-request'
 import { IngestorConfigService } from '..'
-import { BridgeTransferStatusEnum } from '../../storage/entity'
+import { BridgeTransferStatus, BridgeTransferStatusEnum } from '../../storage/entity'
 import { EVENT_DEPOSIT_RECORD_CREATED, IDepositRecordCreatedEvent } from '../../storage/events'
 import { BridgeTransferService } from '../../storage/services'
 import { getSdk, Sdk } from './graphql'
@@ -21,13 +21,18 @@ export class SubqueryProposalIngestor {
         )
     }
 
-    @OnEvent(EVENT_DEPOSIT_RECORD_CREATED, { async: true })
-    public async handleDepositRecordCreated(event: IDepositRecordCreatedEvent): Promise<void> {
-        const { destinationChainId, nonce, originChainId } = event
-
+    /**
+     * manually import a proposal status by deposit nonce
+     * @returns undefined if ingestor isn't configured for such destination chain
+     */
+    public async importProposalStatus(
+        destinationChainId: number,
+        originChainId: number,
+        nonce: string
+    ): Promise<BridgeTransferStatus | undefined> {
         const client = this.clients.get(destinationChainId)
         if (client === undefined) {
-            return
+            return undefined
         }
 
         const result = await client.getProposal({ depositNonce: nonce, originChainId })
@@ -43,10 +48,21 @@ export class SubqueryProposalIngestor {
                 : null
 
         await this.transfers.updateStatus(originChainId, destinationChainId, nonce, status)
-        this.logger.log(
-            `updated status, origin=${originChainId}, dest=${destinationChainId}, nonce=${nonce}, status=${
-                status ?? 'null'
-            }`
-        )
+
+        return status
+    }
+
+    @OnEvent(EVENT_DEPOSIT_RECORD_CREATED, { async: true })
+    public async handleDepositRecordCreated(event: IDepositRecordCreatedEvent): Promise<void> {
+        const { destinationChainId, nonce, originChainId } = event
+        const status = await this.importProposalStatus(destinationChainId, originChainId, nonce)
+
+        if (status !== undefined) {
+            this.logger.log(
+                `imported proposal on creation, origin=${originChainId}, dest=${destinationChainId}, nonce=${nonce}, status=${
+                    status?.toString() ?? 'null'
+                }`
+            )
+        }
     }
 }

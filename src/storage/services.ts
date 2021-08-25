@@ -15,6 +15,15 @@ export class BridgeTransferService {
         private readonly events: EventEmitter2
     ) {}
 
+    public async findNotFinalizedProposals(skip: number, take: number): Promise<IBridgeTransfer[]> {
+        return await this.entityManager.find(BridgeTransfer, {
+            order: { nonce: 'ASC' },
+            skip,
+            take,
+            where: { status: null },
+        })
+    }
+
     public async findLastOne(destinationChainId: number, originChainId: number): Promise<IBridgeTransfer | undefined> {
         return (
             await this.entityManager.find(BridgeTransfer, {

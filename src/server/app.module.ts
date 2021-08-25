@@ -6,6 +6,7 @@ import { IngestorModule } from '../ingestors'
 import { SubgraphIngestorModule } from '../ingestors/subgraph'
 import { SubqueryIngestorModule } from '../ingestors/subquery'
 import { MetricsModule } from '../metrics'
+import { PatrolModule } from '../patrollers'
 import { TaskQueueModule } from '../queues'
 import { StorageModule } from '../storage'
 import { BridgeTransfer } from '../storage/entity'
@@ -18,6 +19,7 @@ import { MetricsController } from './controllers/metrics.controller'
         GlobalConfigModule,
         IngestorModule,
         MetricsModule,
+        PatrolModule,
         StorageModule,
         SubgraphIngestorModule,
         SubqueryIngestorModule,
