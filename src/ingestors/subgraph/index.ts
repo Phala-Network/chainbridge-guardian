@@ -9,16 +9,16 @@ import { SubgraphDepositRecordIngestorOperator } from './DepositRecordIngestor'
     providers: [SubgraphDepositRecordIngestorOperator],
 })
 export class SubgraphIngestorModule implements OnApplicationBootstrap, OnApplicationShutdown {
-    private subgraphOperator?: SubgraphDepositRecordIngestorOperator
+    private depositRecordIngestorOperator?: SubgraphDepositRecordIngestorOperator
 
     constructor(private readonly moduleRef: ModuleRef) {}
 
     onApplicationBootstrap(): void {
-        this.subgraphOperator = this.moduleRef.get(SubgraphDepositRecordIngestorOperator)
-        this.subgraphOperator?.start()
+        this.depositRecordIngestorOperator = this.moduleRef.get(SubgraphDepositRecordIngestorOperator)
+        this.depositRecordIngestorOperator?.start()
     }
 
     onApplicationShutdown(): void {
-        this.subgraphOperator?.stop()
+        this.depositRecordIngestorOperator?.stop()
     }
 }

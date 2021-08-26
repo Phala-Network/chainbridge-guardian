@@ -1,6 +1,11 @@
 import { Injectable, Module } from '@nestjs/common'
 import { GlobalConfigModule, GlobalConfigService } from '../config'
 
+export interface IApiPromiseConfiguration {
+    chainBridge?: boolean
+    endpoint: string
+}
+
 export interface IBridgeTransferPath {
     destination: number
     origin: number
@@ -19,6 +24,7 @@ export interface IProposalDataSource {
 export interface IIngestorDataSources {
     depositRecords: Record<number, IDepositRecordDataSource>
     proposals: Record<number, IProposalDataSource>
+    substrates: Record<number, IApiPromiseConfiguration>
 }
 
 export interface IIngestorConfiguration {

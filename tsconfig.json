@@ -18,6 +18,11 @@
         "noUncheckedIndexedAccess": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
+        "paths": {
+            "@phala/types": ["./src/ingestors/polkadot/interfaces/types.ts"],
+            "@polkadot/api/augment": ["./src/ingestors/polkadot/interfaces/augment-api.ts"],
+            "@polkadot/types/augment": ["./src/ingestors/polkadot/interfaces/augment-types.ts"]
+        },
         "outDir": "dist",
         "rootDir": "src",
         "skipLibCheck": true,

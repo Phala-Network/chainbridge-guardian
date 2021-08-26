@@ -13,6 +13,7 @@ export function load(): IConfiguration {
             dataSources: {
                 depositRecords: [],
                 proposals: [],
+                substrates: [],
             },
         },
     }
