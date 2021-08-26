@@ -1,22 +1,40 @@
 version: '3'
 
 services:
-    app:
+    guardian:
         build:
             args: {}
             context: ..
             dockerfile: docker/Dockerfile
+        container_name: guardian
+        depends_on:
+            - postgres
+        ports:
+            - '127.0.0.1:3000:3000'
+        volumes:
+            - ./docker-compose.d/config.json:/app/config.json:ro
+            - ./docker-compose.d/ormconfig.json:/app/ormconfig.json:ro
     postgres:
         image: postgres:13.3-alpine
+        container_name: postgres
         environment:
             POSTGRES_DB: chainbridge-guardian
             POSTGRES_PASSWORD: chainbridge-guardian
             POSTGRES_USER: chainbridge-guardian
         ports:
-            - 127.0.0.1:5432:5432
+            - '127.0.0.1:5432:5432'
         restart: always
         volumes:
             - postgres:/var/lib/postgresql/data
+    prometheus:
+        image: prom/prometheus
+        container_name: prometheus
+        depends_on:
+            - guardian
+        ports:
+            - '127.0.0.1:9090:9090'
+        volumes:
+            - ./docker-compose.d/prometheus.yml:/etc/prometheus/prometheus.yml:ro
 
 volumes:
     postgres:

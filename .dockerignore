@@ -1,0 +1,4 @@
+src/ingestors/polkadot/interfaces/*
+!src/ingestors/polkadot/interfaces/definitions.ts
+src/ingestors/subgraph/graphql/index.ts
+src/ingestors/subquery/graphql/index.ts
