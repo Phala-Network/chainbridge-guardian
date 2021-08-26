@@ -34,6 +34,7 @@ services:
         ports:
             - '127.0.0.1:9090:9090'
         volumes:
+            - ./docker-compose.d/alerts.yml:/etc/prometheus/alerts.yml:ro
             - ./docker-compose.d/prometheus.yml:/etc/prometheus/prometheus.yml:ro
 
 volumes:
