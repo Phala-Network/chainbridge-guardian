@@ -76,9 +76,13 @@ class ChainBridgeIngestor {
             return
         }
 
-        this.fetch().finally(() => {
-            this.timeout = setTimeout(() => this.tick(), defaultImportInterval * 1000)
-        })
+        this.fetch()
+            .catch((error) => {
+                this.logger.error('failed to fetch:', error)
+            })
+            .finally(() => {
+                this.timeout = setTimeout(() => this.tick(), defaultImportInterval * 1000)
+            })
     }
 }
 
