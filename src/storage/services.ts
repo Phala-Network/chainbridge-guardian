@@ -6,6 +6,13 @@ import { EntityManager, LessThan, MoreThan } from 'typeorm'
 import { BridgeTransfer, BridgeTransferStatus, IBridgeTransfer } from './entity'
 import { EVENT_DEPOSIT_RECORD_CREATED, IDepositRecordCreatedEvent } from './events'
 
+type CountNotFinalizedProposalsResult = Array<{
+    count: string
+    destinationChainId: number
+    originChainId: number
+    status: BridgeTransferStatus
+}>
+
 @Injectable()
 export class BridgeTransferService {
     private logger: Logger = new Logger()
@@ -14,6 +21,20 @@ export class BridgeTransferService {
         @InjectEntityManager() private readonly entityManager: EntityManager,
         private readonly events: EventEmitter2
     ) {}
+
+    public async countNotFinalizedProposals(): Promise<CountNotFinalizedProposalsResult> {
+        return await this.entityManager
+            .getRepository(BridgeTransfer)
+            .createQueryBuilder('record')
+            .select('COUNT(*) as count')
+            .addSelect('record.destinationChainId', 'destinationChainId')
+            .addSelect('record.originChainId', 'originChainId')
+            .addSelect('record.status', 'status')
+            .addGroupBy('record.destinationChainId')
+            .addGroupBy('record.originChainId')
+            .addGroupBy('record.status')
+            .getRawMany()
+    }
 
     public async findNotFinalizedProposals(skip: number, take: number): Promise<IBridgeTransfer[]> {
         return await this.entityManager.find(BridgeTransfer, {
