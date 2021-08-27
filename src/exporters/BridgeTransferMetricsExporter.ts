@@ -3,7 +3,7 @@ import { Gauge } from 'prom-client'
 import { PrometheusRegistry } from '../metrics/services/PrometheusRegistry.service'
 import { BridgeTransferService } from '../storage/services'
 
-const defaultExportInterval = 1
+const defaultExportInterval = 30
 
 @Injectable()
 export class BridgeTransferMetricsExporter {
