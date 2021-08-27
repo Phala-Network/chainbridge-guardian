@@ -8,11 +8,16 @@ groups:
           summary: Guardian instance is inaccessible
       - alert: FailedProposals
         expr: chainbridge_proposal_counts{status="approved"} > 0
-        for: 5m
+        for: 30m
         annotations:
           summary: Some proposals are failed
       - alert: NotFinalizedProposals
         expr: chainbridge_proposal_counts{status="undefined"} > 0
-        for: 5m
+        for: 30m
         annotations:
           summary: Some proposals are never finalized
+      - alert: ImbalanceBridgeAccount
+        expr: (266000000 - (sum(chainbridge_account_balances) + sum(chainbridge_deposit_balances) / 1000000000000)) > 1000
+        for: 30m
+        annotations:
+          summary: Some deposits are gone
