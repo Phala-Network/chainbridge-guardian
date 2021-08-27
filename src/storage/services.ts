@@ -13,6 +13,12 @@ type CountNotFinalizedProposalsResult = Array<{
     status: BridgeTransferStatus
 }>
 
+type FindCalculatedBalanceResult = Array<{
+    balance: string
+    destinationChainId: number
+    originChainId: number
+}>
+
 @Injectable()
 export class BridgeTransferService {
     private logger: Logger = new Logger()
@@ -33,6 +39,18 @@ export class BridgeTransferService {
             .addGroupBy('record.destinationChainId')
             .addGroupBy('record.originChainId')
             .addGroupBy('record.status')
+            .getRawMany()
+    }
+
+    public async findCalculatedBalance(): Promise<FindCalculatedBalanceResult> {
+        return await this.entityManager
+            .getRepository(BridgeTransfer)
+            .createQueryBuilder('record')
+            .select('max("calculatedBalance")', 'balance')
+            .addSelect('record.destinationChainId', 'destinationChainId')
+            .addSelect('record.originChainId', 'originChainId')
+            .addGroupBy('record.destinationChainId')
+            .addGroupBy('record.originChainId')
             .getRawMany()
     }
 

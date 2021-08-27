@@ -2,23 +2,28 @@ import { Module, OnApplicationBootstrap, OnApplicationShutdown } from '@nestjs/c
 import { ModuleRef } from '@nestjs/core'
 import { MetricsModule } from '../metrics'
 import { StorageModule } from '../storage'
+import { BridgeDepositBalanceMetricsExporter } from './BridgeBalanceMetricsExporter'
 import { BridgeTransferMetricsExporter } from './BridgeTransferMetricsExporter'
 
 @Module({
     imports: [MetricsModule, StorageModule],
-    providers: [BridgeTransferMetricsExporter],
+    providers: [BridgeDepositBalanceMetricsExporter, BridgeTransferMetricsExporter],
 })
 export class ExporterModule implements OnApplicationBootstrap, OnApplicationShutdown {
-    private exporter!: BridgeTransferMetricsExporter
+    private balanceExporter!: BridgeDepositBalanceMetricsExporter
+    private proposalStatusExporter!: BridgeTransferMetricsExporter
 
     constructor(private readonly moduleRef: ModuleRef) {}
 
     onApplicationBootstrap(): void {
-        this.exporter = this.moduleRef.get(BridgeTransferMetricsExporter)
-        this.exporter.start()
+        this.balanceExporter = this.moduleRef.get(BridgeDepositBalanceMetricsExporter)
+        this.proposalStatusExporter = this.moduleRef.get(BridgeTransferMetricsExporter)
+        this.balanceExporter.start()
+        this.proposalStatusExporter.start()
     }
 
     onApplicationShutdown(): void {
-        this.exporter.stop()
+        this.balanceExporter.stop()
+        this.proposalStatusExporter.stop()
     }
 }
