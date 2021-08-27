@@ -1,0 +1,146 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: guardian
+  namespace: chainbridge-guardian
+spec:
+  selector:
+    matchLabels:
+      app: guardian
+  template:
+    metadata:
+      labels:
+        app: guardian
+    spec:
+      containers:
+        - name: guardian
+          image: docker.io/amphineko/phala-chainbridge-guardian
+          resources:
+            limits:
+              memory: "1024Mi"
+              cpu: "1000m"
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - name: config
+              mountPath: /app/config.json
+              readOnly: true
+              subPath: config.json
+            - name: config
+              mountPath: /app/ormconfig.json
+              readOnly: true
+              subPath: ormconfig.json
+      volumes:
+        - name: config
+          configMap:
+            name: guardian-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: guardian
+  namespace: chainbridge-guardian
+spec:
+  selector:
+    app: guardian
+  ports:
+    - port: 3000
+      targetPort: 3000
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  namespace: chainbridge-guardian
+spec:
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "1000m"
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - name: config
+              mountPath: /etc/prometheus/alerts.yml
+              readOnly: true
+              subPath: alerts.yml
+            - name: config
+              mountPath: /etc/prometheus/prometheus.yml
+              readOnly: true
+              subPath: prometheus.yml
+      volumes:
+        - name: config
+          configMap:
+            name: prometheus-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  namespace: chainbridge-guardian
+spec:
+  selector:
+    app: prometheus
+  ports:
+    - port: 9090
+      targetPort: 9090
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: chainbridge-guardian
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:13.3-alpine
+          env:
+            - name: POSTGRES_DB
+              value: guardian
+            - name: POSTGRES_PASSWORD
+              value: guardian
+            - name: POSTGRES_USER
+              value: guardian
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 5432
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: chainbridge-guardian
+spec:
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432

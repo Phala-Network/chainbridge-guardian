@@ -6,6 +6,7 @@ services:
             args: {}
             context: ..
             dockerfile: docker/Dockerfile
+        image: amphineko/phala-chainbridge-guardian
         container_name: guardian
         depends_on:
             - postgres
